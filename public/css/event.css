@@ -1,0 +1,143 @@
+.all-post-container {
+    padding: 0;
+    font-size: 20px;
+}
+
+/* Card Tabel */
+.table-card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f0f0f0;
+    overflow: hidden;
+}
+
+.header-wrapper {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.btn-new-post {
+    white-space: nowrap !important;
+    min-width: fit-content;
+}
+
+/* Header Tabel */
+table thead th {
+    background-color: #f8f9fa;
+    color: #888;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 18px 15px;
+    border-bottom: 2px solid #f1f1f1;
+}
+
+/* Baris Tabel */
+table tbody td {
+    padding: 18px 15px;
+    color: #444;
+    font-size: 14px;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+/* Image Wrapper & Thumbnail */
+.img-wrapper {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #eeeeee; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-thumbnail-post {
+    width: 55px;
+    height: 55px;
+    object-fit: cover; 
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #eee;
+}
+
+/* Tombol New Event (Mengikuti Style New Post) */
+.btn-new-post {
+    background: #2E7D32;
+    color: white !important;
+    border-radius: 50px;
+    padding: 8px 24px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.2);
+    transition: 0.3s;
+    border: none;
+}
+
+.btn-new-post:hover { transform: translateY(-2px); background: #1b4d21; }
+
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-publish { 
+    background: #e8f5e9; 
+    color: #2e7d32; 
+} 
+
+.status-draft { 
+    background: #fffde7; 
+    color: #fbc02d; 
+}
+
+.status-trash { 
+    background: #f5f5f5; 
+    color: #757575; 
+}   
+
+
+.action-btns {
+    display: flex; gap: 8px; justify-content: center; 
+}
+
+.btn-action {
+    width: 35px; height: 35px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 10px; transition: 0.2s; border: none; cursor: pointer;
+}
+
+.btn-action.edit { 
+    background: #e3f2fd; 
+    color: #1976d2; 
+    text-decoration: none; 
+}
+
+.btn-action.delete { 
+    background: #ffebee; 
+    color: #d32f2f; 
+}
+
+.btn-action:hover { 
+    transform: scale(1.1); 
+}
+
+/* Pagination Footer */
+.pagination-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #fff; padding: 15px 25px; border-top: 1px solid #eee;
+    border-radius: 0 0 20px 20px;
+}
+
+.pagination-info { font-size: 13px; color: #777; }

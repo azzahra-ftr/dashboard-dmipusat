@@ -1,0 +1,131 @@
+/* Palette Warna DMI */
+:root {
+    --dmi-green: #347a44;
+    --dmi-blue: #008cff;
+    --bg-light: #f4f7f6;
+    --text-muted: #828282;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    background-color: #2E7D32 !important; /* Hijau DMI yang lebih cerah sesuai desain */
+    /* Membuat sudut kanan atas melengkung sesuai Gambar 2 */
+    border-radius: 0 80px 0 0; 
+    min-height: 100vh;
+    padding: 30px 25px; /* Padding sedikit diperlebar */
+    position: fixed;
+    width: 260px; /* Sesuaikan dengan lebar sidebar kamu */
+}
+
+/* Tombol Upload Berita (Dibuat Capsule/Lonjong) */
+.btn-upload-berita {
+    background-color: #008DFF;
+    color: white;
+    border-radius: 50px; /* Diubah menjadi 50px agar berbentuk kapsul */
+    font-weight: 500;
+    padding: 12px 20px;
+    width: 100%;
+    margin-bottom: 50px; /* Jarak ke menu di bawahnya diperlebar */
+    border: none;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 15px;
+}
+
+/* Navigasi Menu */
+.nav-link {
+    color: white !important;
+    opacity: 1; /* Di desain Gambar 2, teks terlihat solid putih */
+    font-weight: 700; /* Font lebih tebal sesuai desain */
+    margin-bottom: 25px; /* Jarak antar menu diperlebar */
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    text-transform: none; /* Diubah dari uppercase ke normal */
+    font-size: 1.1rem; /* Ukuran font diperbesar sedikit */
+    letter-spacing: normal; /* Menghapus jarak antar huruf */
+    gap: 15px; /* Jarak antara ikon dan teks */
+}
+
+/* Ukuran Ikon di Sidebar */
+.nav-link i {
+    font-size: 28px; /* Ikon dibuat lebih besar dan mencolok */
+}
+
+/* Hover & Active State */
+.nav-link:hover, .nav-link.active {
+    opacity: 1;
+    /* Jika ingin ada background tipis saat aktif seperti di Gambar 1 */
+    background: rgba(255, 255, 255, 0.1); 
+    border-radius: 15px;
+}
+
+/* Header & Content Wrapper */
+.header-bar {
+    background: white;
+    border-radius: 20px;
+    padding: 15px 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+/* Table Customization */
+.table-container {
+    background: white;
+    border-radius: 25px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 800;
+    font-size: 0.7rem;
+    padding: 20px 15px;
+    border: none;
+    text-transform: uppercase;
+}
+
+.table tbody td {
+    padding: 18px 15px;
+    vertical-align: middle;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #f8f8f8;
+}
+
+/* Status Badges */
+.badge-publish { background-color: #d1f7e1; color: #219653; border-radius: 20px; padding: 6px 18px; font-size: 0.75rem; }
+.badge-draft { background-color: #fff9db; color: #f2c94c; border-radius: 20px; padding: 6px 18px; font-size: 0.75rem; }
+.badge-deleted { background-color: #ffdce0; color: #eb5757; border-radius: 20px; padding: 6px 18px; font-size: 0.75rem; }
+
+/* Image Box */
+.img-placeholder {
+    width: 48px;
+    height: 48px;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.btn-new-post {
+    background-color: var(--dmi-green);
+    color: white;
+    border-radius: 25px;
+    padding: 10px 25px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border: none;
+}

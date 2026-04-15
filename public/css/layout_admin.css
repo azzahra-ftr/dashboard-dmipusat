@@ -1,0 +1,313 @@
+/* Import Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #2E7D32;
+    --bg-color: #F4F7F6;
+    --sidebar-color: #1b4d21;
+    --text-color: #333;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: white;
+}
+
+.brand-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 30px;
+    height: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    margin-bottom: 10px;
+}
+
+.logo-img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: black;
+    margin: 0;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.home-section {
+    margin-top: 100px; 
+    height: 100vh;
+    
+}
+
+/* --- SIDEBAR CSS --- */
+.sidebar {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    bottom: 70px;
+    height: calc(100vh - 50px);
+    width: 260px;
+    background: var(--sidebar-color);
+    padding: 20px 14px;
+    z-index: 99;
+    transition: all 0.5s ease;
+    border-radius: 0 80px 80px 0;
+    overflow: visible !important;
+}
+
+.sidebar.open {
+    width: 260px;
+}
+
+
+.sidebar #btn {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 23px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--white);
+    transition: all 0.1s ease;
+}
+
+.sidebar .nav-list {
+    margin-top: 20px;
+    height: calc(100% - 150px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+}
+
+.sidebar li {
+    position: relative;
+    margin: 12px 0;
+    list-style: none;
+}
+
+.sidebar .btn-upload {
+    width: 220px;
+    height: 60px;
+    background: #008DFF;
+    border: none;
+    padding: 8px;
+    border-radius: 50px;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: 0.3s;
+}
+
+.sidebar .btn-upload:hover {
+    background: #0077d6;
+    transform: translateY(-2px);
+}
+
+.sidebar li a {
+    display: flex;
+    height: 60px;
+    width: 100%;
+    border-radius: 50px 0 0 50px;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.4s ease;
+}
+
+.sidebar li a:hover, 
+.sidebar li a.active {
+    background: #ffffff !important;
+    width: calc(100% + 14px); 
+    position: relative;
+    z-index: 1;
+}
+
+/* Mengubah warna teks dan icon jadi hijau saat hover/active */
+.sidebar li a:hover .links_name,
+.sidebar li a.active .links_name,
+.sidebar li a:hover i,
+.sidebar li a.active i {
+    color: var(--sidebar-color) !important; /* Warna hijau sidebar kamu */
+    font-weight: 700;
+}
+
+.sidebar li a:hover::before,
+.sidebar li a.active::before {
+    content: "";
+    position: absolute;
+    top: -30px; 
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border-radius: 50%;
+    transition: all 0.1s ease;
+    box-shadow: 15px 15px 0 0 #ffffff; 
+    z-index: -1;
+}
+
+/* LENGKUNGAN BAWAH (Curve Out Bottom) */
+.sidebar li a:hover::after,
+.sidebar li a.active::after {
+    content: "";
+    position: absolute;
+    bottom: -30px; 
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border-radius: 50%;
+    transition: all 0.1s ease;
+    box-shadow: 15px -15px 0 0 #ffffff;
+    z-index: -1;
+}
+
+.sidebar li i {
+    height: 50px;
+    line-height: 50px;
+    font-size: 24px;
+    border-radius: 12px;
+    min-width: 50px;
+    text-align: center;
+    color: var(--white);
+}
+
+.sidebar li .links_name {
+    color: var(--white);
+    font-size: 20px;
+    font-weight: 400;
+    white-space: nowrap;
+    opacity: 1;
+    pointer-events: auto;
+    transition: 0.4s;
+}
+
+/* --- SEARCH BAR --- */
+.home-section {
+    position: relative;
+    left: 260px;
+    width: calc(100% - 260px);
+    height: 100vh
+    overflow-y: auto;
+    transition: all 0.5s ease;
+    padding: 5px 30px 30px 30px;
+}
+
+.home-section::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 280px; 
+    width: calc(100% - 260px);
+    height: 80px; 
+    background: var(--white); 
+    z-index: 999; 
+}
+
+.navbar {
+    position: fixed;
+    top: 10px;
+    left: 280px;
+    right: 20px;
+    height: 70px;
+    border: 2px slategray;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    z-index: 1000;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.search-box {
+    position: relative;
+    left: 180px;
+    height: 45px;
+    width: 400px;
+}
+
+.search-box input {
+    height: 50px;
+    width: 500px;
+    outline: none;
+    background: var(--bg-color);
+    border: none;
+    border-radius: 80px;
+    padding: 0 15px 0 45px;
+    font-size: 14px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--primary-color);
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.notification {
+    position: relative;
+    font-size: 22px;
+    color: #666;
+    cursor: pointer;
+}
+
+.notification .dot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    height: 8px;
+    width: 8px;
+    background: #ff4d4d;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.profile-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.profile-details img {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile_name {
+    font-size: 14px;
+    font-weight: 600;
+}
