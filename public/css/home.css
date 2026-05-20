@@ -1,187 +1,523 @@
-    /* --- LAYOUT DASAR --- */
-    .all-post-container {
-        padding: 30px;
-        background-color: #f8f9fa;
-        min-height: 100vh;
+/* home.css */
+
+.home-container {
+    padding: 32px 40px;
+    background-color: #ffffff;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ── Section Title ── */
+.home-section-block {
+    margin-bottom: 12px;
+}
+
+.home-section-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+.home-divider {
+    border: none;
+    border-top: 1.5px solid #e0e0e0;
+    margin: 28px 0;
+}
+
+/* ══════════════════════════════════════ */
+/* BERITA                                */
+/* ══════════════════════════════════════ */
+
+.berita-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* Featured post kiri */
+.berita-featured-img {
+    width: 100%;
+    height: 220px;
+    background: #e0e0e0;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.berita-featured-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.berita-featured-body {
+    margin-top: 12px;
+}
+
+.berita-featured-desc {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Latest post kanan */
+.berita-latest-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 16px;
+}
+
+.berita-latest-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+}
+
+.berita-latest-img {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.berita-latest-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.berita-latest-info {
+    flex: 1;
+}
+
+.berita-latest-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 6px 0;
+    line-height: 1.4;
+}
+
+.berita-latest-meta {
+    font-size: 11px;
+    color: #999;
+}
+
+/* ══════════════════════════════════════ */
+/* KEGIATAN                              */
+/* ══════════════════════════════════════ */
+
+.kegiatan-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.kegiatan-card {
+    background: #f5f5f5;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kegiatan-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.kegiatan-card-img {
+    width: 100%;
+    height: 160px;
+    background: #ddd;
+    overflow: hidden;
+}
+
+.kegiatan-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.kegiatan-card-body {
+    padding: 14px 16px 16px;
+}
+
+.kegiatan-card-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0 0 8px 0;
+}
+
+.kegiatan-card-desc {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.6;
+    margin: 0 0 14px 0;
+}
+
+.kegiatan-card-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #555;
+}
+
+.kegiatan-card-date i {
+    font-size: 14px;
+    color: #888;
+}
+
+/* See more */
+.home-see-more {
+    text-align: right;
+    margin-top: 16px;
+}
+
+.home-see-more a {
+    font-size: 13px;
+    color: #2e7d32;
+    font-weight: 600;
+    text-decoration: none;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+    
+}
+
+.home-see-more a:hover {
+    color: #1b5e20;
+}
+
+/* RESPONSIVE VIEW */
+/* ================================================ */
+/* HOME RESPONSIVE                                  */
+/* ================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .home-container {
+        padding: 24px;
     }
 
-    /* Fix untuk Row agar konsisten dengan Grid Bootstrap */
-    .all-post-container .row {
-        margin-right: -10px;
-        margin-left: -10px;
+    .kegiatan-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .home-container {
+        padding: 16px;
     }
 
-    /* --- HEADER SECTION --- */
-    .all-post-container .header-wrapper {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
+    .home-section-title {
+        font-size: 18px;
+        margin-bottom: 14px;
     }
 
-    .all-post-container .status-indicator {
-        background: #ffffff;
-        padding: 8px 20px;
+    /* Berita: stack jadi 1 kolom */
+    .berita-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .berita-featured-img {
+        height: 180px;
         border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 700;
-        color: #2E7D32;
-        border: 1px solid #eee;
-        font-size: 13px;
     }
 
-    .all-post-container .dot-active {
-        width: 10px;
-        height: 10px;
-        background-color: #2E7D32;
-        border-radius: 50%;
-        box-shadow: 0 0 8px rgba(46, 125, 50, 0.5);
+    .berita-latest-title {
+        font-size: 15px;
+        margin-bottom: 12px;
     }
 
-    /* --- KARTU STATISTIK (CORE DESIGN) --- */
-    .all-post-container .stat-card {
-        background: #ffffff;
-        border-radius: 15px;
-        padding: 15px 20px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-        position: relative;
-        overflow: hidden;
-        height: 100%;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: none;
+    .berita-latest-img {
+        width: 56px;
+        height: 56px;
     }
 
-    .all-post-container .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+    .berita-latest-name {
+        font-size: 12px;
     }
 
-    /* Aksen Warna Samping */
-    .all-post-container .stat-card::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 6px;
+    /* Kegiatan: stack jadi 1 kolom */
+    .kegiatan-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
     }
 
-    .all-post-container .card-posts::before { background-color: #2E7D32; }
-    .all-post-container .card-drafts::before { background-color: #FBC02D; }
-    .all-post-container .card-categories::before { background-color: #1976D2; }
-    .all-post-container .card-tags::before { background-color: #00BCD4; }
-
-    .all-post-container .stat-card h1 {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: #222;
-        margin: 5px 0;
+    .kegiatan-card-img {
+        height: 140px;
     }
 
-    .all-post-container .stat-label {
-        font-size: 10px;
-        font-weight: 700;
-        color: #999;
-        letter-spacing: 0.8px;
-    }
-
-    .all-post-container .stat-desc {
-        font-size: 11px;
-        color: #777;
-    }
-
-    .all-post-container .stat-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-    }
-
-    .all-post-container .bg-posts { background-color: #E8F5E9; color: #2E7D32; }
-    .all-post-container .bg-drafts { background-color: #FFFDE7; color: #FBC02D; }
-    .all-post-container .bg-categories { background-color: #E3F2FD; color: #1976D2; }
-    .all-post-container .bg-tags { background-color: #E0F7FA; color: #00BCD4; }
-
-    /* --- LOG AKTIVITAS --- */
-    .all-post-container .activity-card {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 25px;
-        margin-top: 25px;
-    }
-
-    .all-post-container .activity-item {
-        padding: 15px 0;
-        border-bottom: 1px solid #f6f6f6;
-        display: flex;
-        align-items: center;
-        gap: 15px;
+    .kegiatan-card-title {
         font-size: 14px;
     }
 
-    /* --- SECTION BERITA & EVENT --- */
-    .all-post-container .news-section-row {
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 35px;
+    .home-divider {
+        margin: 20px 0;
     }
+}
 
-    .all-post-container .section-title-wrapper {
-        margin-bottom: 20px;
-    }
+/* ══════════════════════════════════════ */
+/* STATISTIK DASHBOARD                   */
+/* ══════════════════════════════════════ */
 
-    .all-post-container .title-line {
-        width: 35px;
-        height: 3px;
-        background-color: #2E7D32;
-        border: none;
-        margin-top: 5px;
-    }
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
 
-    .all-post-container .main-news-placeholder {
-        height: 350px;
-        border-radius: 15px;
-        overflow: hidden;
-        position: relative;
-        background-color: #333;
-    }
+.stat-card {
+    background: #f5f5f5;
+    border-radius: 12px;
+    padding: 16px 18px;
+}
 
-    .all-post-container .main-news-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        padding: 25px;
-        background: linear-gradient(transparent, rgba(0,0,0,0.85));
-        color: white;
-    }
+.stat-label {
+    font-size: 12px;
+    color: #888;
+    margin: 0 0 4px;
+}
 
-    .all-post-container .news-thumb-small {
-        width: 75px;
-        height: 60px;
-        background-color: #eee;
-        border-radius: 10px;
-        flex-shrink: 0;
-    }
+.stat-val {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+}
 
-    .all-post-container .small-title {
-        font-size: 13px;
-        color: #333;
-        font-weight: 700;
-    }
+.stat-sub {
+    font-size: 11px;
+    color: #aaa;
+    margin: 3px 0 0;
+}
 
-    /* Event Specific Styling */
-    .all-post-container .event-card {
-        transition: transform 0.3s ease;
-    }
+/* Dua kolom */
+.dash-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
 
-    .all-post-container .event-img-top {
-        height: 160px;
-        background-color: #f0f0f0;
-    }
+.dash-card {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.dash-card-full {
+    margin-bottom: 0;
+}
+
+.dash-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 14px;
+}
+
+/* Berita terpopuler */
+.pop-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.pop-row:last-child { border-bottom: none; }
+
+.pop-rank {
+    font-size: 12px;
+    font-weight: 600;
+    color: #bbb;
+    min-width: 16px;
+}
+
+.pop-info { flex: 1; min-width: 0; }
+
+.pop-title {
+    font-size: 12px;
+    color: #1a1a1a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 0 2px;
+}
+
+.pop-meta {
+    font-size: 11px;
+    color: #bbb;
+    margin: 0;
+}
+
+.pop-views {
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    white-space: nowrap;
+}
+
+/* Status postingan */
+.status-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.status-row:last-of-type { border-bottom: none; }
+
+.status-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.status-icon-green { background: #e8f5e9; color: #2e7d32; }
+.status-icon-blue  { background: #e3f2fd; color: #1565c0; }
+
+.status-info { flex: 1; }
+
+.status-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 2px;
+}
+
+.status-desc {
+    font-size: 11px;
+    color: #aaa;
+    margin: 0;
+}
+
+.status-count {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.status-count-green { color: #2e7d32; }
+.status-count-blue  { color: #1565c0; }
+
+.status-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: #f0f0f0;
+    display: flex;
+    overflow: hidden;
+    gap: 3px;
+    margin-top: 14px;
+}
+
+.status-bar-fill { height: 100%; border-radius: 4px; }
+.status-bar-green { background: #2e7d32; }
+.status-bar-blue  { background: #1565c0; }
+
+.status-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #888;
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.legend-dot-green { background: #2e7d32; }
+.legend-dot-blue  { background: #1565c0; }
+
+/* Event mendatang */
+.event-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 24px;
+}
+
+.ev-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.ev-row:last-child { border-bottom: none; }
+
+.ev-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+.ev-dot-green { background: #2e7d32; }
+.ev-dot-amber { background: #f57f17; }
+
+.ev-info { flex: 1; }
+
+.ev-name {
+    font-size: 12px;
+    color: #1a1a1a;
+    margin: 0 0 2px;
+}
+
+.ev-date {
+    font-size: 11px;
+    color: #bbb;
+    margin: 0;
+}
+
+.ev-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ev-badge-green { background: #e8f5e9; color: #2e7d32; }
+.ev-badge-amber { background: #fff3e0; color: #f57f17; }
+
+/* Responsive statistik */
+@media (max-width: 1024px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .event-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 767px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .dash-two-col { grid-template-columns: 1fr; }
+    .event-grid { grid-template-columns: 1fr; }
+    .stat-val { font-size: 20px; }
+}

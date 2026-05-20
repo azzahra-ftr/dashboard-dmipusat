@@ -1,170 +1,210 @@
 @extends('admin.layout.layout_admin')
 
 @push('after-style')
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+<link rel="stylesheet" href="{{ asset('css/home.css') }}">
 @endpush
 
 @section('content')
-<div class="all-post-container">
-    {{-- HEADER DENGAN STATUS AKTIF --}}
-    <div class="header-wrapper">
-        <div>
-            <h4 class="fw-bold m-0 text-dark">DASHBOARD OVERVIEW</h4>
-            <small class="text-muted">Selamat datang, Admin! Berikut ringkasan performa Sistem DMI.</small>
+<div class="home-container">
+
+    {{-- ═══════════════════════════════════════ --}}
+    {{-- SECTION STATISTIK                      --}}
+    {{-- ═══════════════════════════════════════ --}}
+
+    {{-- Kartu Ringkasan --}}
+    <div class="stat-grid">
+        <div class="stat-card">
+            <p class="stat-label">Total Berita</p>
+            <p class="stat-val">{{ number_format($totalBerita) }}</p>
+            <p class="stat-sub">postingan aktif</p>
         </div>
-        
-        <div class="status-indicator">
-            <span class="dot-active"></span>
-            <span>AKTIF</span>
+        <div class="stat-card">
+            <p class="stat-label">Pengunjung</p>
+            <p class="stat-val">{{ $totalViews >= 1000 ? number_format($totalViews / 1000, 1) . 'K' : number_format($totalViews) }}</p>
+            <p class="stat-sub">semua postingan</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Postingan Mendatang</p>
+            <p class="stat-val">{{ number_format($upcomingPost) }}</p>
+            <p class="stat-sub">terjadwal tayang</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Total Event</p>
+            <p class="stat-val">{{ number_format($totalEvent) }}</p>
+            <p class="stat-sub">{{ $eventBerlangsung }} berlangsung</p>
         </div>
     </div>
 
-    {{-- 4 KARTU STATISTIK DENGAN AKSEN --}}
-    <div class="row g-4 mb-4">
-        {{-- KARTU 1: Posts --}}
-        <div class="col-md-3">
-            <div class="stat-card card-posts">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="stat-label text-uppercase">Total Posts</span>
-                        <h1 class="fw-bold my-1">417</h1>
-                    </div>
-                    <div class="stat-icon bg-posts">
-                        <i class='bx bx-news'></i>
-                    </div>
+    {{-- Berita Terpopuler & Status Postingan --}}
+    <div class="dash-two-col">
+
+        {{-- Berita Terpopuler --}}
+        <div class="dash-card">
+            <p class="dash-card-title">Berita terpopuler</p>
+            @foreach($popularPosts as $i => $post)
+            <div class="pop-row">
+                <span class="pop-rank">{{ $i + 1 }}</span>
+                <div class="pop-info">
+                    <p class="pop-title">{{ Str::limit($post->post_title, 45) }}</p>
+                    <p class="pop-meta">{{ \Carbon\Carbon::parse($post->post_date)->format('M d') }}</p>
                 </div>
-                <div class="stat-desc mt-2">12 Berita Baru (Minggu ini)</div>
+                <span class="pop-views">{{ number_format($post->view_count) }}</span>
             </div>
+            @endforeach
         </div>
 
-        {{-- KARTU 2: Draft --}}
-        <div class="col-md-3">
-            <div class="stat-card card-drafts">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="stat-label text-uppercase">Berita Draft</span>
-                        <h1 class="fw-bold my-1">12</h1>
-                    </div>
-                    <div class="stat-icon bg-drafts">
-                        <i class='bx bx-edit-alt'></i>
-                    </div>
+        {{-- Status Postingan --}}
+        <div class="dash-card">
+            <p class="dash-card-title">Status postingan</p>
+
+            <div class="status-row">
+                <div class="status-icon status-icon-green">
+                    <i class='bx bx-check-circle'></i>
                 </div>
-                <div class="stat-desc mt-2">Perlu direview sebelum diterbitkan.</div>
-            </div>
-        </div>
-
-        {{-- KARTU 3: Kategori --}}
-        <div class="col-md-3">
-            <div class="stat-card card-categories">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="stat-label text-uppercase">Kategori</span>
-                        <h1 class="fw-bold my-1">5</h1>
-                    </div>
-                    <div class="stat-icon bg-categories">
-                        <i class='bx bx-folder'></i>
-                    </div>
+                <div class="status-info">
+                    <p class="status-name">Publish</p>
+                    <p class="status-desc">Tayang di website</p>
                 </div>
-                <div class="stat-desc mt-2">Kajian, Rapat, Kegiatan Sosial, dll.</div>
+                <span class="status-count status-count-green">{{ number_format($postPublish) }}</span>
             </div>
-        </div>
 
-        {{-- KARTU 4: Tags --}}
-        <div class="col-md-3">
-            <div class="stat-card card-tags">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="stat-label text-uppercase">Tags</span>
-                        <h1 class="fw-bold my-1">23</h1>
-                    </div>
-                    <div class="stat-icon bg-tags">
-                        <i class='bx bx-purchase-tag-alt'></i>
-                    </div>
+            <div class="status-row">
+                <div class="status-icon status-icon-blue">
+                    <i class='bx bx-calendar-check'></i>
                 </div>
-                <div class="stat-desc mt-2">Kata kunci untuk pencarian berita.</div>
+                <div class="status-info">
+                    <p class="status-name">Terjadwal</p>
+                    <p class="status-desc">Akan tayang otomatis</p>
+                </div>
+                <span class="status-count status-count-blue">{{ number_format($postTerjadwal) }}</span>
+            </div>
+
+            {{-- Mini bar proporsi --}}
+            <div class="status-bar">
+                <div class="status-bar-fill status-bar-green" style="width: {{ $pctPublish }}%"></div>
+                <div class="status-bar-fill status-bar-blue" style="width: {{ $pctTerjadwal }}%"></div>
+            </div>
+            <div class="status-legend">
+                <div class="legend-item">
+                    <div class="legend-dot legend-dot-green"></div>
+                    <span>Publish ({{ $pctPublish }}%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot legend-dot-blue"></div>
+                    <span>Terjadwal ({{ $pctTerjadwal }}%)</span>
+                </div>
             </div>
         </div>
+
     </div>
 
-    {{-- LOG AKTIVITAS TERBARU --}}
-    <div class="activity-card shadow-sm">
-        <h6 class="fw-bold mb-4 text-dark">Log Aktivitas Terbaru (Hari ini)</h6>
-        <ul class="activity-list">
-            <li class="activity-item">
-                <i class='bx bx-megaphone fs-5 text-success'></i>
-                <span>Berita <strong>"Tabligh Akbar Nasional"</strong> berhasil diterbitkan (Oleh: Buchori) - 14:02</span>
-            </li>
-            <li class="activity-item">
-                <i class='bx bx-trash fs-5 text-danger'></i>
-                <span>Draft <strong>"Rapat Rutin"</strong> dihapus - 11:30</span>
-            </li>
-            <li class="activity-item">
-                <i class='bx bx-folder-plus fs-5 text-primary'></i>
-                <span>Kategori <strong>"Sosial"</strong> ditambahkan - 09:15</span>
-            </li>
-        </ul>
-    </div>
-</div>
-
-{{-- SECTION PREVIEW BERITA --}}
-<div class="news-section-row">
-    {{-- BERITA UTAMA (Kiri) --}}
-    <div class="col-lg-8">
-    <div class="section-title-wrapper">
-        <h5 class="fw-bold text-dark">Berita Terbaru</h5>
-        <hr class="title-line">
-    </div>
-    @if($headline)
-    <div class="stat-card p-0 overflow-hidden mb-4">
-        <div class="main-news-placeholder">
-            <img src="{{ asset('storage/' . $headline->image) }}" class="w-100 h-100 object-fit-cover">
-            <div class="main-news-overlay">
-                <span class="badge bg-success mb-2">{{ $headline->category->name ?? 'Berita' }}</span>
-                <h4 class="fw-bold text-white">{{ $headline->post_title }}</h4>
+    {{-- Event Mendatang --}}
+    <div class="dash-card dash-card-full">
+        <p class="dash-card-title">Event mendatang</p>
+        <div class="event-grid">
+            @forelse($upcomingEvents as $event)
+            @php
+                $now   = now();
+                $start = \Carbon\Carbon::parse($event->start_date);
+                $end   = \Carbon\Carbon::parse($event->end_date);
+                $isNow = $now->between($start, $end);
+            @endphp
+            <div class="ev-row">
+                <div class="ev-dot {{ $isNow ? 'ev-dot-amber' : 'ev-dot-green' }}"></div>
+                <div class="ev-info">
+                    <p class="ev-name">{{ Str::limit($event->post->post_title ?? 'Untitled', 35) }}</p>
+                    <p class="ev-date">{{ $start->format('d M Y') }}</p>
+                </div>
+                @if($isNow)
+                    <span class="ev-badge ev-badge-amber">Berlangsung</span>
+                @else
+                    <span class="ev-badge ev-badge-green">Upcoming</span>
+                @endif
             </div>
+            @empty
+            <p style="font-size:13px;color:#999;">Tidak ada event mendatang.</p>
+            @endforelse
         </div>
     </div>
-    @else
-    <p class="text-muted">Belum ada berita utama.</p>
-    @endif
-</div>
 
-    {{-- SECTION LATEST POST (BERITA) --}}
-    <!--  -->
-    <div class="latest-post-list">
-    @foreach($latestPosts as $post)
-    <div class="stat-card p-2 mb-3 shadow-sm border-0">
-        <div class="d-flex align-items-center gap-3">
-            <img src="{{ $headline->getImageUrl() }}" class="news-thumb-small rounded object-fit-cover" class="w-100 h-100 object-fit-cover">
-            <div class="news-info-small">
-                <h6 class="fw-bold mb-1 small-title">{{ Str::limit($post->title, 40) }}</h6>
-                <small class="text-muted" style="font-size: 10px;">
-                </small>
-            </div>
-        </div>
-    </div>
-    @endforeach
-</div>
+    <hr class="home-divider" style="margin-top: 28px;">
 
-{{-- SECTION EVENT --}}
-<div class="row mt-2">
-    <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold text-dark m-0">Event Terbaru</h5>
-            <a href="{{ route('events.event') }}" class="text-success fw-bold small text-decoration-none">Selengkapnya</a>
-        </div>
-    </div>
-    
-    <div class="col-md-6"> 
-            <div class="stat-card p-0 overflow-hidden border-0 shadow-sm event-card">
-                <div class="p-3">
-                    <h6 class="fw-bold mb-2">{{ $latestEvent->post_title ?? 'Kegiatan DMI' }}</h6>
-                    <p class="text-muted mb-3" style="font-size: 12px;">
-                        Silakan klik selengkapnya untuk melihat detail kegiatan masjid.
+    {{-- ═══════════════════════════════ --}}
+    {{-- SECTION BERITA                 --}}
+    {{-- ═══════════════════════════════ --}}
+    <section class="home-section-block">
+        <h2 class="home-section-title">Berita</h2>
+        <div class="berita-grid">
+            <div class="berita-featured">
+                <div class="berita-featured-img">
+                    <img src="{{ $featuredPost->getImageUrl() ?? asset('admin-assets/img/placeholder.png') }}"
+                         alt="{{ $featuredPost->post_title ?? '' }}">
+                </div>
+                <div class="berita-featured-body">
+                    <p class="berita-featured-desc">
+                        {{ Str::limit(strip_tags($featuredPost->post_content ?? ''), 120) }}
                     </p>
-                    <a href="{{ route('events.event') }}" class="btn btn-sm btn-outline-success">Selengkapnya</a>
                 </div>
             </div>
-    </div>
+            <div class="berita-latest">
+                <h3 class="berita-latest-title">Latest Post</h3>
+                @foreach($latestPosts as $post)
+                <div class="berita-latest-item">
+                    <div class="berita-latest-img">
+                        <img src="{{ $post->getImageUrl() ?? asset('admin-assets/img/placeholder.png') }}"
+                             alt="{{ $post->post_title }}">
+                    </div>
+                    <div class="berita-latest-info">
+                        <p class="berita-latest-name">{{ Str::limit($post->post_title, 60) }}</p>
+                        <span class="berita-latest-meta">
+                            {{ \Carbon\Carbon::parse($post->post_date)->format('M d') }}
+                        </span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="home-see-more">
+            <a href="{{ route('posts.index') }}">Selengkapnya</a>
+        </div>
+    </section>
+
+    <hr class="home-divider">
+
+    {{-- ═══════════════════════════════ --}}
+    {{-- SECTION KEGIATAN               --}}
+    {{-- ═══════════════════════════════ --}}
+    <section class="home-section-block">
+        <h2 class="home-section-title">Kegiatan</h2>
+        <div class="kegiatan-grid">
+            @foreach($events as $event)
+            <div class="kegiatan-card">
+                <div class="kegiatan-card-img">
+                    <img src="{{ $event->getImageUrl() ?? asset('admin-assets/img/placeholder.png') }}"
+                         alt="{{ $event->post->post_title ?? '' }}">
+                </div>
+                <div class="kegiatan-card-body">
+                    <h4 class="kegiatan-card-title">
+                        {{ Str::limit($event->post->post_title ?? 'Untitled', 40) }}
+                    </h4>
+                    <p class="kegiatan-card-desc">
+                        {{ Str::limit(strip_tags($event->post->post_content ?? ''), 100) }}
+                    </p>
+                    <div class="kegiatan-card-date">
+                        <i class="bx bx-time-five"></i>
+                        <span>
+                            {{ \Carbon\Carbon::parse($event->start_date)->format('l, j F') }},
+                            {{ \Carbon\Carbon::parse($event->start_date)->format('H:i') }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        <div class="home-see-more">
+            <a href="{{ route('events.index') }}">Selengkapnya</a>
+        </div>
+    </section>
+
 </div>
 @endsection

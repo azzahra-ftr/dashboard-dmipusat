@@ -9,9 +9,10 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+
+    protected$connection = 'wordpress';
     protected $table = 'ism13qf_users'; 
     protected $primaryKey = 'ID'; 
-
     public $timestamps = false; 
 
     protected $fillable = [
@@ -26,6 +27,11 @@ class User extends Authenticatable
         'user_pass',
         'remember_token',
     ];
+
+    public function getAuthIdentifierName()
+    {
+        return 'ID';
+    }
 
     public function getAuthPassword()
     {

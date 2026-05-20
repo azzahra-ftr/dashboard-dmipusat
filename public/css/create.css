@@ -1,0 +1,32 @@
+/* Styling Khusus Form Berita */
+body {
+    background-color: yellow !important;
+}
+.custom-header {
+    background-color: #2d5a27;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px 5px 0 0;
+}
+
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+}
+
+.btn-add {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+}
+
+.btn-submit {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 50px;
+    border-radius: 5px;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3;
+    color: white;
+}

@@ -188,3 +188,190 @@ table tbody td {
     background-color: #2E7D32 !important;
     color: white !important;
 }
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 767px) {
+    .all-post-container {
+        font-size: 14px;
+    }
+
+    /* Sembunyikan kolom yang tidak penting di mobile */
+    table thead th:nth-child(3), /* PREVIEW */
+    table tbody td:nth-child(3),
+    table thead th:nth-child(5), /* TIME */
+    table tbody td:nth-child(5),
+    table thead th:nth-child(6), /* STATUS */
+    table tbody td:nth-child(6) {
+        display: none;
+    }
+
+    /* Perkecil padding */
+    table thead th,
+    table tbody td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    /* Perkecil gambar */
+    .img-wrapper {
+        width: 35px;
+        height: 35px;
+    }
+
+    .img-thumbnail-post {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+    }
+
+    /* Pagination */
+    .pagination-footer {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .btn-new-post {
+        padding: 6px 16px;
+        font-size: 12px;
+    }
+
+    .header-wrapper h4 {
+        font-size: 16px;
+    }
+}
+@media (max-width: 767px) {
+    .navbar {
+        left: auto;
+        right: 0;
+        top: 0;
+        width: auto;
+        height: 70px;
+        padding: 0 15px;
+        justify-content: flex-end;
+        background: transparent;
+        border-bottom: none;
+        z-index: 1002;
+    }
+
+    .search-box {
+        display: none;
+    }
+
+    .search-box input {
+        width: 100%;
+        height: 38px;
+    }
+
+    .nav-icons {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .profile_name {
+        display: none;
+    }
+
+    .home-section {
+        margin-top: 70px !important;
+    }
+
+    .bx-chevron-down {
+        display: none !important;
+    }
+}
+/* Search bar mobile di dalam konten */
+.mobile-search {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .mobile-search {
+        display: flex;
+        align-items: center;
+        background: #F4F7F6;
+        border-radius: 80px;
+        padding: 8px 15px;
+        margin-bottom: 15px;
+        gap: 10px;
+    }
+
+    .mobile-search i {
+        font-size: 20px;
+        color: #2E7D32;
+    }
+
+    .mobile-search input {
+        border: none;
+        background: transparent;
+        outline: none;
+        width: 100%;
+        font-size: 14px;
+        font-family: 'Poppins', sans-serif;
+    }
+}
+
+/* RESPONSIVE VIEW */
+/* ================================================ */
+/* ALL POST RESPONSIVE                              */
+/* ================================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    table thead th:nth-child(4), /* DATE */
+    table tbody td:nth-child(4) {
+        display: none;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    /* Sembunyikan kolom tidak penting */
+    table thead th:nth-child(3), /* PREVIEW/CONTENT */
+    table tbody td:nth-child(3),
+    table thead th:nth-child(4), /* DATE */
+    table tbody td:nth-child(4),
+    table thead th:nth-child(5), /* STATUS */
+    table tbody td:nth-child(5) {
+        display: none;
+    }
+
+    table thead th,
+    table tbody td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .img-wrapper {
+        width: 36px;
+        height: 36px;
+    }
+
+    .img-thumbnail-post {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+    }
+
+    .btn-new-post {
+        padding: 7px 14px;
+        font-size: 12px;
+    }
+
+    .header-wrapper h4 {
+        font-size: 16px;
+    }
+
+    .pagination-footer {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .table-card {
+        border-radius: 12px;
+    }
+}

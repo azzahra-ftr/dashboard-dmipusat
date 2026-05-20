@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\DB;
+@endphp
+
 @extends('admin.layout.layout_admin')
 
 @push('after-style')
@@ -5,7 +9,14 @@
 @endpush
 
 @section('content')
-<div class="all-post-container">
+<div class="mobile-search">
+    <i class='bx bx-search'></i>
+    <input type="text" name="search" id="mobileSearch"
+           value="{{ request('search') }}"
+           placeholder="Cari berita atau informasi..."
+           autocomplete="off">
+</div>
+
     {{-- Header Area --}}
     <div class="header-wrapper">
         <div>
@@ -64,7 +75,16 @@
                             <small class="text-muted">{{ Str::limit(strip_tags($post->post_content), 60) }}</small>
                         </td>
                         <td>
-                            <span class="badge badge-author">{{ $post->author->user_nicename ?? 'Buchori' }}</span>
+                            <span class="badge badge-author">
+                                @php
+                                    $namaPenulis = DB::connection('mysql')
+                                        ->table('ism13qf_postmeta')
+                                        ->where('post_id', $post->ID)
+                                        ->where('meta_key', 'nama_penulis')
+                                        ->value('meta_value');
+                                @endphp
+                                {{ $namaPenulis ?? $post->author->user_nicename ?? 'Admin' }}
+                            </span>
                         </td>
                         <td>
                             <small class="text-muted">{{ date('d M Y, H:i', strtotime($post->post_date)) }}</small>
@@ -109,3 +129,37 @@
     </nav>
 </div>
 @endsection
+
+
+@push('after-script')
+<script>
+    // Desktop search - real time
+    let desktopTimer;
+    const desktopSearch = document.getElementById('desktopSearch');
+    if (desktopSearch) {
+        desktopSearch.addEventListener('keyup', function() {
+            clearTimeout(desktopTimer);
+            const keyword = this.value;
+            desktopTimer = setTimeout(() => {
+                window.location.href = '{{ route('posts.index') }}?search=' + keyword;
+            }, 800);
+        });
+    }
+
+    
+ // Mobile search - real time
+    var mobileTimer;
+    var mobileSearchInput = document.getElementById('mobileSearch');
+    if (mobileSearchInput) {
+        ['keyup', 'input'].forEach(function(event) {
+            mobileSearchInput.addEventListener(event, function() {
+                clearTimeout(mobileTimer);
+                var keyword = this.value;
+                mobileTimer = setTimeout(() => {
+                    window.location.href = '{{ route('posts.index') }}?search=' + encodeURIComponent(keyword);
+                }, 500);
+            });
+        });
+    }
+</script>
+@endpush

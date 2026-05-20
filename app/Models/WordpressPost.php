@@ -6,20 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class WordpressPost extends Model
 {
-    protected $connection = 'wordpress'; 
+    protected $connection = 'wordpress';
     protected $table = 'ism13qf_posts';  
     protected $primaryKey = 'ID';
     public $timestamps = false;
 
     protected $fillable = [
-        'post_title',
-        'post_content',
-        'post_status',
-        'post_type',
-        'post_author',
-        'post_date',
-        'post_name'
-    ];
+    'post_title',
+    'post_content',
+    'post_excerpt',
+    'post_status',
+    'post_type',
+    'post_author',
+    'post_date',
+    'post_date_gmt',
+    'post_modified',
+    'post_modified_gmt',
+    'post_name',
+    'guid',
+    'to_ping',
+    'pinged',
+    'post_content_filtered',
+];
 
     public function author()
 {
@@ -51,4 +59,23 @@ public function getImageUrl()
 
     return null; 
 }
+
+public function meta()
+    {
+        return $this->hasMany(WordpressPostMeta::class, 'post_id', 'ID');
+    }
+
+    public function getMeta($key, $default = null)
+    {
+        $meta = $this->meta->firstWhere('meta_key', $key);
+        return $meta ? $meta->meta_value : $default;
+    }
+
+    public function setMeta($key, $value)
+    {
+        $this->meta()->updateOrCreate(
+            ['meta_key' => $key],
+            ['meta_value' => $value]
+        );
+    }
 }
