@@ -52,8 +52,18 @@ public function getImageUrl()
             ->where('ID', $thumbnailId->meta_value)
             ->first();
             
-        if ($attachment) {
-            return $attachment->guid; 
+        if ($attachment && !empty($attachment->guid)) {
+            return $attachment->guid;
+        }
+
+        $attachedFile = \DB::connection($this->connection)
+            ->table('ism13qf_postmeta')
+            ->where('post_id', $thumbnailId->meta_value)
+            ->where('meta_key', '_wp_attached_file')
+            ->value('meta_value');
+
+        if ($attachedFile) {
+            return asset('storage/' . ltrim($attachedFile, '/'));
         }
     }
 

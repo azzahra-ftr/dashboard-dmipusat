@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\WordpressPost;
 use App\Models\Event;
+use App\Models\Notification;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        $this->publishDueScheduledPosts();
+
         // ── STATISTIK KARTU ATAS ──
 
         // Total berita (publish saja)
@@ -78,7 +81,8 @@ class DashboardController extends Controller
         $latestPosts = WordpressPost::where('post_status', 'publish')
             ->where('post_type', 'post')
             ->orderBy('post_date', 'desc')
-            ->skip(1)->take(3)
+            ->skip(1)
+            ->take(3)
             ->get();
 
         $events = Event::with(['post', 'post.meta'])
@@ -92,5 +96,29 @@ class DashboardController extends Controller
             'pctPublish', 'pctTerjadwal', 'popularPosts', 'upcomingEvents',
             'featuredPost', 'latestPosts', 'events'
         ));
+    }
+
+    private function publishDueScheduledPosts(): int
+    {
+        $posts = WordpressPost::where('post_type', 'post')
+            ->where('post_status', 'future')
+            ->where('post_date', '<=', now())
+            ->get();
+
+        foreach ($posts as $post) {
+            $post->update([
+                'post_status' => 'publish',
+                'post_modified' => now(),
+                'post_modified_gmt' => now(),
+            ]);
+
+            Notification::create([
+                'type' => 'post_auto_published',
+                'title' => 'Berita Otomatis Dipublish',
+                'message' => 'Judul: ' . $post->post_title . "\nTanggal: " . now()->format('d M Y, H:i'),
+            ]);
+        }
+
+        return $posts->count();
     }
 }

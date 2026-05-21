@@ -7,10 +7,11 @@
 
 body {
     background-color: #336633;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 24px 0;
 }
 
 .container {
@@ -137,10 +138,19 @@ body {
 
 /* Tablet & HP (Layar di bawah 992px) */
 @media (max-width: 991px) {
+    body {
+        align-items: flex-start;
+    }
+
+    .container {
+        padding: 32px 20px;
+    }
+
     .login-card {
         max-width: 500px; /* Card mengecil untuk layar portrait */
         flex-direction: column;
         min-height: auto;
+        margin: 0 auto;
     }
 
     .login-image {
@@ -163,6 +173,14 @@ body {
 
 /* HP Kecil (Layar di bawah 480px) */
 @media (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
     .login-card {
         border-radius: 25px;
         flex-direction: column;

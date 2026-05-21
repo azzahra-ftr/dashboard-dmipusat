@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
+use App\Models\PostTag;
 use App\Models\WordpressPost;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +20,8 @@ class WpPostController extends Controller
     }
     public function index(Request $request)
 {
+    $this->publishDueScheduledPosts();
+
     $query = WordpressPost::with('author')
                 ->where('post_type', 'post');
 
@@ -30,6 +35,40 @@ class WpPostController extends Controller
     return view('admin.posts.index', compact('posts'));
 }
 
+    public function publishScheduledDue()
+    {
+        $publishedCount = $this->publishDueScheduledPosts();
+
+        return response()->json([
+            'success' => true,
+            'published_count' => $publishedCount,
+        ]);
+    }
+
+    private function publishDueScheduledPosts(): int
+    {
+        $posts = WordpressPost::where('post_type', 'post')
+            ->where('post_status', 'future')
+            ->where('post_date', '<=', now())
+            ->get();
+
+        foreach ($posts as $post) {
+            $post->update([
+                'post_status' => 'publish',
+                'post_modified' => now(),
+                'post_modified_gmt' => now(),
+            ]);
+
+            Notification::create([
+                'type' => 'post_auto_published',
+                'title' => 'Berita Otomatis Dipublish',
+                'message' => 'Judul: ' . $post->post_title . "\nTanggal: " . now()->format('d M Y, H:i'),
+            ]);
+        }
+
+        return $posts->count();
+    }
+
     public function create()
     {
         return view('admin.posts.create');
@@ -41,31 +80,33 @@ class WpPostController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'judul'      => 'required|max:255',
+        'judul'      => 'required|max:255|unique:wordpress.ism13qf_posts,post_title',
         'penulis'    => 'required|string',
         'isi_berita' => 'required',
         'tags'       => 'nullable|array',
         'tags.*'     => 'nullable|string|max:100',
         'gambar'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'caption'    => 'nullable|string',
+        'scheduled_at' => 'required_if:status,future|nullable|date|after:now',
+    ], [
+        'judul.unique' => 'Judul berita sudah digunakan, silakan gunakan judul lain.',
     ]);
 
-    // Upload gambar jika ada
-    $gambarPath = null;
-    if ($request->hasFile('gambar')) {
-        $gambarPath = $request->file('gambar')->store('berita', 'public');
-    }
+    $status = $request->input('status', 'publish');
+    $publishDate = $status === 'future' && $request->scheduled_at
+        ? Carbon::parse($request->scheduled_at)
+        : now();
 
     // Simpan berita
 $post = WordpressPost::create([
     'post_title'             => $request->judul,
     'post_content'           => $request->isi_berita,
     'post_excerpt'           => $request->caption ?? '',
-    'post_status'            => 'publish',
+    'post_status'            => $status,
     'post_type'              => 'post',
     'post_author'            => Auth::id() ?? 1,
-    'post_date'              => now(),
-    'post_date_gmt'          => now(),
+    'post_date'              => $publishDate,
+    'post_date_gmt'          => $publishDate,
     'post_modified'          => now(),
     'post_modified_gmt'      => now(),
     'post_name'              => Str::slug($request->judul),
@@ -77,7 +118,7 @@ $post = WordpressPost::create([
 
 // Simpan tagline
 if ($request->tagline) {
-    DB::table('ism13qf_postmeta')->insert([
+    DB::connection('wordpress')->table('ism13qf_postmeta')->insert([
         'post_id'    => $post->ID,
         'meta_key'   => 'tagline_berita',
         'meta_value' => $request->tagline,
@@ -85,7 +126,7 @@ if ($request->tagline) {
 }
 
 // Simpan nama penulis ke postmeta
-DB::table('ism13qf_postmeta')->insert([
+DB::connection('wordpress')->table('ism13qf_postmeta')->insert([
     'post_id'    => $post->ID,
     'meta_key'   => 'nama_penulis',
     'meta_value' => $request->penulis,
@@ -97,7 +138,7 @@ if ($request->hasFile('gambar')) {
     $gambarUrl  = asset('storage/' . $gambarPath);
 
     // Simpan attachment sebagai post baru
-   $attachmentId = DB::table('ism13qf_posts')->insertGetId([
+   $attachmentId = DB::connection('wordpress')->table('ism13qf_posts')->insertGetId([
     'post_title'             => $request->file('gambar')->getClientOriginalName(),
     'post_content'           => '',
     'post_excerpt'           => '', // TAMBAHKAN INI
@@ -117,14 +158,14 @@ if ($request->hasFile('gambar')) {
     'post_mime_type'         => $request->file('gambar')->getMimeType(),
 ]);
     // Set sebagai thumbnail
-    DB::table('ism13qf_postmeta')->insert([
+    DB::connection('wordpress')->table('ism13qf_postmeta')->insert([
         'post_id'    => $post->ID,
         'meta_key'   => '_thumbnail_id',
         'meta_value' => $attachmentId,
     ]);
 
     // Simpan URL gambar di postmeta attachment
-    DB::table('ism13qf_postmeta')->insert([
+    DB::connection('wordpress')->table('ism13qf_postmeta')->insert([
         'post_id'    => $attachmentId,
         'meta_key'   => '_wp_attached_file',
         'meta_value' => $gambarPath,
@@ -134,7 +175,7 @@ if ($request->hasFile('gambar')) {
     if ($request->has('tags')) {
         foreach ($request->tags as $tag) {
             if (!empty($tag)) {
-                \App\Models\PostTag::create([
+                PostTag::create([
                     'post_id'  => $post->ID,
                     'tag_name' => $tag,
                 ]);
@@ -142,21 +183,41 @@ if ($request->hasFile('gambar')) {
         }
     }
 
-    return redirect()->route('posts.index')->with('success', 'Berita berhasil diterbitkan!');
+    if ($status === 'publish') {
+        Notification::create([
+            'type' => 'post_published',
+            'title' => 'Berita Baru Dipublish',
+            'message' => 'Oleh: ' . $request->penulis . "\nJudul: " . $request->judul . "\nTanggal: " . now()->format('d M Y, H:i'),
+        ]);
+    }
+
+    if ($status === 'future') {
+        Notification::create([
+            'type' => 'post_scheduled',
+            'title' => 'Berita Dijadwalkan',
+            'message' => 'Oleh: ' . $request->penulis . "\nJudul: " . $request->judul . "\nDijadwalkan: " . $publishDate->format('d M Y, H:i'),
+        ]);
+    }
+
+    $message = $status === 'future'
+        ? 'Berita dijadwalkan pada ' . $publishDate->translatedFormat('d F Y, H:i') . ' WIB'
+        : 'Berita berhasil diterbitkan!';
+
+    return redirect()->route('posts.index')->with('success', $message);
 }
      
     public function edit($id)
 {
     $post = WordpressPost::findOrFail($id);
     
-    $tags = \App\Models\PostTag::where('post_id', $id)->get();
+    $tags = PostTag::where('post_id', $id)->get();
     
-    $namaPenulis = DB::table('ism13qf_postmeta')
+    $namaPenulis = DB::connection('wordpress')->table('ism13qf_postmeta')
         ->where('post_id', $id)
         ->where('meta_key', 'nama_penulis')
         ->value('meta_value');
 
-    $tagline = DB::table('ism13qf_postmeta')
+    $tagline = DB::connection('wordpress')->table('ism13qf_postmeta')
         ->where('post_id', $id)
         ->where('meta_key', 'tagline_berita')
         ->value('meta_value');
@@ -187,7 +248,7 @@ if ($request->hasFile('gambar')) {
     ]);
 
     // Update nama penulis
-    DB::table('ism13qf_postmeta')
+    DB::connection('wordpress')->table('ism13qf_postmeta')
         ->updateOrInsert(
             ['post_id' => $post->ID, 'meta_key' => 'nama_penulis'],
             ['meta_value' => $request->penulis]
@@ -198,7 +259,7 @@ if ($request->hasFile('gambar')) {
         $gambarPath = $request->file('gambar')->store('berita', 'public');
         $gambarUrl  = asset('storage/' . $gambarPath);
 
-        $attachmentId = DB::table('ism13qf_posts')->insertGetId([
+        $attachmentId = DB::connection('wordpress')->table('ism13qf_posts')->insertGetId([
             'post_title'             => $request->file('gambar')->getClientOriginalName(),
             'post_content'           => '',
             'post_excerpt'           => '',
@@ -218,18 +279,18 @@ if ($request->hasFile('gambar')) {
             'post_mime_type'         => $request->file('gambar')->getMimeType(),
         ]);
 
-        DB::table('ism13qf_postmeta')
+        DB::connection('wordpress')->table('ism13qf_postmeta')
             ->where('post_id', $post->ID)
             ->where('meta_key', '_thumbnail_id')
             ->delete();
 
-        DB::table('ism13qf_postmeta')->insert([
+        DB::connection('wordpress')->table('ism13qf_postmeta')->insert([
             'post_id'    => $post->ID,
             'meta_key'   => '_thumbnail_id',
             'meta_value' => $attachmentId,
         ]);
 
-        DB::table('ism13qf_postmeta')->insert([
+        DB::connection('wordpress')->table('ism13qf_postmeta')->insert([
             'post_id'    => $attachmentId,
             'meta_key'   => '_wp_attached_file',
             'meta_value' => $gambarPath,
@@ -237,11 +298,11 @@ if ($request->hasFile('gambar')) {
     }
 
     // Update tags
-    \App\Models\PostTag::where('post_id', $post->ID)->delete();
+    PostTag::where('post_id', $post->ID)->delete();
     if ($request->has('tags')) {
         foreach ($request->tags as $tag) {
             if (!empty($tag)) {
-                \App\Models\PostTag::create([
+                PostTag::create([
                     'post_id'  => $post->ID,
                     'tag_name' => $tag,
                 ]);
@@ -250,11 +311,17 @@ if ($request->hasFile('gambar')) {
     }
 
     // Update tagline
-    DB::table('ism13qf_postmeta')
+    DB::connection('wordpress')->table('ism13qf_postmeta')
     ->updateOrInsert(
         ['post_id' => $post->ID, 'meta_key' => 'tagline_berita'],
         ['meta_value' => $request->tagline ?? '']
     );
+
+    Notification::create([
+        'type' => 'post_updated',
+        'title' => 'Berita Diperbarui',
+        'message' => 'Oleh: ' . $request->penulis . "\nJudul: " . $request->judul . "\nTanggal: " . now()->format('d M Y, H:i'),
+    ]);
 
     return redirect()->route('posts.index')->with('success', 'Berita berhasil diperbarui!');
 }
@@ -263,9 +330,56 @@ if ($request->hasFile('gambar')) {
     public function destroy($id)
     {
         $post = WordpressPost::findOrFail($id);
+        $judulBerita = $post->post_title;
+        $namaPenulis = DB::connection('wordpress')->table('ism13qf_postmeta')
+            ->where('post_id', $id)
+            ->where('meta_key', 'nama_penulis')
+            ->value('meta_value');
+
+        DB::connection('wordpress')->table('ism13qf_posts')
+            ->where('post_parent', $id)
+            ->where('post_type', 'attachment')
+            ->delete();
+
+        PostTag::where('post_id', $id)->delete();
+        DB::connection('wordpress')->table('ism13qf_postmeta')->where('post_id', $id)->delete();
         $post->delete();
 
+        Notification::create([
+            'type' => 'post_deleted',
+            'title' => 'Berita Dihapus',
+            'message' => 'Oleh: ' . ($namaPenulis ?? 'Admin') . "\nJudul: " . $judulBerita . "\nTanggal: " . now()->format('d M Y, H:i'),
+        ]);
+
         return redirect()->route('posts.index')->with('success', 'Berita berhasil dihapus!');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return redirect()->route('posts.index')->with('error', 'Tidak ada berita yang dipilih!');
+        }
+
+        $posts = WordpressPost::whereIn('ID', $ids)->pluck('post_title', 'ID');
+
+        DB::connection('wordpress')->table('ism13qf_posts')
+            ->whereIn('post_parent', $ids)
+            ->where('post_type', 'attachment')
+            ->delete();
+
+        PostTag::whereIn('post_id', $ids)->delete();
+        DB::connection('wordpress')->table('ism13qf_postmeta')->whereIn('post_id', $ids)->delete();
+        WordpressPost::whereIn('ID', $ids)->delete();
+
+        Notification::create([
+            'type' => 'post_deleted',
+            'title' => 'Berita Dihapus Massal',
+            'message' => count($ids) . " berita dihapus:\n" . $posts->implode("\n"),
+        ]);
+
+        return redirect()->route('posts.index')->with('success', count($ids) . ' berita berhasil dihapus!');
     }
 
     public function eventIndex()
@@ -277,4 +391,3 @@ if ($request->hasFile('gambar')) {
         return view('admin.events.event', compact('events'));
     }
 }
-

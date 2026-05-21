@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\UserController;  
 use App\Http\Controllers\Admin\EventController;
+use App\Models\Notification;
 
 
 // --- DIRECT BASE URL KE LOGIN --- ///
@@ -36,9 +37,11 @@ Route::controller(WpPostController::class)->group(function () {
 Route::get('/wp-posts', 'index')->name('posts.index');          
 Route::get('/wp-posts/create', 'create')->name('posts.create');
 Route::post('/wp-posts/store', 'store')->name('posts.store');
+Route::post('/wp-posts/publish-scheduled-due', 'publishScheduledDue')->name('posts.publishScheduledDue');
 Route::get('/wp-posts/edit/{id}', 'edit')->name('posts.edit');
 Route::post('/wp-posts/update/{id}', 'update')->name('posts.update');
 Route::delete('/wp-posts/delete/{id}', 'destroy')->name('posts.delete');
+Route::delete('/wp-posts/bulk-delete', 'bulkDestroy')->name('posts.bulkDelete');
 
 });
 
@@ -50,5 +53,10 @@ Route::controller(EventController::class)->group(function (){
     Route::put('/events/{id}', [EventController::class, 'update'])->name('events.update');
     Route::delete('/events/{id}', [EventController::class, 'destroy'])->name('events.destroy');
 });
+
+Route::post('/notifications/read-all', function () {
+    Notification::where('is_read', false)->update(['is_read' => true]);
+    return response()->json(['success' => true]);
+})->name('notifications.readAll');
 
 });

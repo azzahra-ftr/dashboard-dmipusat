@@ -8,9 +8,19 @@
     <link rel="stylesheet" href="{{ asset('css/layout_admin.css') }}">
     @stack('after-style')
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+    <script src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js" defer></script>
 </head>
 <body>
+    @php
+        $unreadCount = class_exists(\App\Models\Notification::class)
+            ? \App\Models\Notification::where('is_read', false)->count()
+            : 0;
+        $showSearch = request()->routeIs('posts.index') || request()->routeIs('events.index');
+        $searchPlaceholder = request()->routeIs('events.*')
+            ? 'Cari event atau kegiatan...'
+            : 'Cari berita atau informasi...';
+    @endphp
 
     {{-- Sidebar --}}
     <aside class="sidebar">
@@ -109,18 +119,24 @@
                 </div>
             </div>
 
-            {{-- Tengah: Search --}}
-            <div class="navbar-search">
-                <i class='bx bx-search'></i>
-                <input type="text" id="desktopSearch" placeholder="Cari berita, event, atau kategori...">
-                <button class="search-btn"><i class='bx bx-search'></i></button>
-            </div>
+            @if($showSearch)
+                {{-- Tengah: Search --}}
+                <div class="navbar-search">
+                    <i class='bx bx-search'></i>
+                    <input type="text" id="desktopSearch" value="{{ request('search') }}" placeholder="{{ $searchPlaceholder }}" autocomplete="off">
+                    <button class="search-btn" type="button" id="desktopSearchBtn"><i class='bx bx-search'></i></button>
+                </div>
+            @else
+                <div class="navbar-spacer"></div>
+            @endif
 
             {{-- Kanan: Bell + Profil --}}
             <div class="nav-icons">
-                <div class="notification">
+                <div class="notification" id="notifBell" onclick="toggleNotif()">
                     <i class='bx bx-bell'></i>
-                    <span class="notif-badge">3</span>
+                    @if($unreadCount > 0)
+                        <span class="notif-badge">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
+                    @endif
                 </div>
                 <div class="profile-details" onclick="toggleDropdown()">
                     <div class="profile-content">
@@ -159,19 +175,83 @@
             @yield('content')
         </div>
 
+        {{-- Panel Notifikasi --}}
+        <div class="notif-panel" id="notifPanel">
+            <div class="notif-panel-header">
+                <div>
+                    <strong>Notifikasi</strong>
+                    @if($unreadCount > 0)
+                        <span class="notif-panel-count">{{ $unreadCount }}</span>
+                    @endif
+                </div>
+                <div class="notif-panel-actions">
+                    <button type="button" onclick="markAllRead()">Tandai semua dibaca</button>
+                    <button type="button" onclick="closeNotif()" aria-label="Tutup notifikasi">&times;</button>
+                </div>
+            </div>
+            <div class="notif-panel-body">
+                @php
+                    $notifications = class_exists(\App\Models\Notification::class)
+                        ? \App\Models\Notification::orderBy('created_at', 'desc')->take(30)->get()
+                        : collect();
+                @endphp
+
+                @forelse($notifications->groupBy(fn ($n) => \Carbon\Carbon::parse($n->created_at)->format('d M Y')) as $date => $items)
+                    <div class="notif-date-label">
+                        {{ $date === now()->format('d M Y') ? 'Hari Ini' : ($date === now()->subDay()->format('d M Y') ? 'Kemarin' : $date) }}
+                    </div>
+                    @foreach($items as $notification)
+                    @php
+                        $notifClass = match ($notification->type) {
+                            'post_published', 'post_auto_published', 'post_updated' => 'success',
+                            'post_scheduled' => 'warning',
+                            'post_deleted' => 'danger',
+                            default => 'info',
+                        };
+                        $notifIcon = match ($notification->type) {
+                            'post_published', 'post_auto_published', 'post_updated' => 'bx-check-circle',
+                            'post_scheduled' => 'bx-time',
+                            'post_deleted' => 'bx-trash',
+                            default => 'bx-calendar-event',
+                        };
+                    @endphp
+                    <div class="notif-item {{ $notification->is_read ? '' : 'unread' }} notif-{{ $notifClass }}">
+                        <div class="notif-item-icon"><i class='bx {{ $notifIcon }}'></i></div>
+                        <div>
+                            <div class="notif-item-title">{{ $notification->title }}</div>
+                            <div class="notif-item-message">{!! nl2br(e($notification->message)) !!}</div>
+                            <div class="notif-item-time">{{ $notification->created_at?->diffForHumans() }}</div>
+                        </div>
+                        @if(!$notification->is_read)
+                            <span class="notif-unread-dot"></span>
+                        @endif
+                    </div>
+                    @endforeach
+                @empty
+                    <div class="notif-empty">Belum ada notifikasi</div>
+                @endforelse
+            </div>
+        </div>
+
     </section>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     <script>
         const btnMenu = document.getElementById('btn-menu');
         const sidebar = document.querySelector('.sidebar');
         const overlay = document.getElementById('sidebarOverlay');
 
         if (btnMenu) {
-            btnMenu.addEventListener('click', function () {
-                sidebar.classList.toggle('active');
-                overlay.classList.toggle('active');
+            btnMenu.addEventListener('click', function (event) {
+                event.stopPropagation();
+                if (window.innerWidth <= 767) {
+                    const isOpen = sidebar.classList.toggle('active');
+                    overlay.classList.toggle('active', isOpen);
+                    document.body.classList.toggle('sidebar-open', isOpen);
+                    return;
+                }
+
+                document.body.classList.toggle('sidebar-collapsed');
             });
         }
 
@@ -179,8 +259,28 @@
             overlay.addEventListener('click', function () {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
+                document.body.classList.remove('sidebar-open');
             });
         }
+
+        document.addEventListener('click', function (event) {
+            const isMobile = window.innerWidth <= 767;
+            if (!isMobile || !sidebar.classList.contains('active')) return;
+            if (!sidebar.contains(event.target) && !btnMenu.contains(event.target)) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.classList.remove('sidebar-open');
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.classList.remove('sidebar-open');
+                closeNotif();
+            }
+        });
 
         function toggleDropdown() {
             document.getElementById('profileDropdown').classList.toggle('show');
@@ -194,9 +294,10 @@
             }
         });
 
-        document.getElementById('desktopSearch')?.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                const keyword = this.value;
+        function submitDesktopSearch() {
+            const input = document.getElementById('desktopSearch');
+            if (!input) return;
+            const keyword = input.value;
                 const url     = new URL(window.location.href);
                 if (keyword.trim() !== '') {
                     url.searchParams.set('search', keyword);
@@ -204,10 +305,45 @@
                     url.searchParams.delete('search');
                 }
                 window.location.href = url.toString();
+        }
+
+        document.getElementById('desktopSearch')?.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                submitDesktopSearch();
+            }
+        });
+
+        document.getElementById('desktopSearchBtn')?.addEventListener('click', submitDesktopSearch);
+
+        function toggleNotif() {
+            document.getElementById('notifPanel')?.classList.toggle('show');
+        }
+
+        function closeNotif() {
+            document.getElementById('notifPanel')?.classList.remove('show');
+        }
+
+        function markAllRead() {
+            fetch('{{ route('notifications.readAll') }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            }).then(() => window.location.reload());
+        }
+
+        document.addEventListener('click', function (event) {
+            const panel = document.getElementById('notifPanel');
+            const bell = document.getElementById('notifBell');
+            if (panel && bell && !panel.contains(event.target) && !bell.contains(event.target)) {
+                closeNotif();
             }
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts')
     @stack('after-script')
 </body>
 </html>

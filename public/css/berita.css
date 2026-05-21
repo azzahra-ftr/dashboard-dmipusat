@@ -1,14 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 /* Styling Khusus Form Berita */
 
 
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f6f5f5;
+}
+
 .custom-header {
+    font-family: 'Inter', sans-serif;
     background-color: #2d5a27;
     color: white;
     padding: 10px 15px;
     border-radius: 5px 5px 0 0; 
+    font-weight: bold;
 }
 
 .judul-halaman {
+    font-family: 'Inter', sans-serif;
     color: black;       
     font-weight: bold;    
     margin-bottom: 5px;
@@ -16,20 +25,18 @@
 }
 
 .custom-input {
-    /* 1. Lebar otomatis mengikuti kontainer (100% dari kolom parent) */
-    width: 100% !important; 
-    
-    /* 2. Hapus 'height' yang spesifik (misal: 50px). 
-       Gunakan 'height: auto' agar tinggi mengikuti padding */
-    height: auto !important; 
-    
-    /* 3. Gunakan padding agar tinggi kolom "melar" dengan rapi 
-       tanpa merusak teks di dalamnya */
-    padding: 10px 15px !important; 
-    
-    /* 4. Agar border tidak terlihat kaku */
-    border: 1px solid #ced4da; 
-    border-radius: 4px;
+    border: 2px solid #e4e5e6;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 16px;
+    color: #1e293b;
+    width: 100%;
+}
+
+.custom-input:focus {
+    border-color: #94a3b8;
+    box-shadow: none;
+    outline: none;
 }
 
 .note-editor {
@@ -38,27 +45,185 @@
     height:auto;
 }
 
-.card.card-details-berita {
-    border: 1px solid #2d5a27 !important; /* Force border hijau */
+/* tambah ini*/
+.form {
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 550;
+}
+
+
+.card{
+    background-color: #fff !important;
+}
+.card-details-berita {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+/* Hapus/override header hijau */
+.card-details-berita .card-header,
+.custom-header {
+    display: none;
+}
+
+.card.card-upload-gambar {
+    border: none !important; /* Force border hijau */
     border-radius: 10px !important;        /* Force sudut melengkung */
     overflow: hidden;                     /* Penting agar isi card tidak keluar dari radius */
     box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Opsional: sedikit bayangan agar terlihat elegan */
     margin-bottom: 20px;
 }
 
-.card.card-upload-gambar {
-    border: 1px solid #2d5a27 !important; /* Force border hijau */
-    border-radius: 10px !important;        /* Force sudut melengkung */
-    overflow: hidden;                     /* Penting agar isi card tidak keluar dari radius */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Opsional: sedikit bayangan agar terlihat elegan */
+
+
+.btn-tambah-tag-baru:hover {
+    text-decoration: underline;
+}
+
+.input-group .btn-add {
+    border: 1px solid #e2e8f0;
+    border-radius: 0 8px 8px 0 !important;
+    background: #f8fafc;
+    color: #374151;
+    padding: 0 12px;
+}
+
+#tags-container .tag-row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    margin-bottom: 8px;
+}
+
+
+#tags-container .btn-add:hover {
+    background: #f1f5f9 !important;
+}
+
+#tags-container .custom-input {
+    border-radius: 8px 0 0 8px !important;
+    border-right: none !important;
+    flex: 1;
+}
+
+#tags-container .btn-add {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 0 8px 8px 0 !important;
+    background: #fff !important;
+    color: #374151;
+    padding: 0 14px;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    width: auto !important;
+    flex-shrink: 0;
+}
+
+#tags-container .input-group {
+    margin-bottom: 8px;
+}
+
+#tags-container {
+    max-width: 400px;
+}
+
+.upload-area {
+    border: 2px dashed #e2e8f0;
+    border-radius: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color 0.2s;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 20px;
 }
+
+.upload-area.drag-over {
+    border-color: #007bff;
+    background: #f0f7ff;
+}
+
+.progress-bar-wrapper {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #f7b84b;
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.2s ease;
+}
+
+#previewGambar {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 10px;
+}
+
+.upload-success {
+    color: #16a34a;
+    font-size: 0.85rem;
+    margin: 4px 0;
+}
+
+.upload-change {
+    color: #f7b84b;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
+    margin: 0;
+}
+
+.upload-area:hover {
+    border-color: #94a3b8;
+    background: #f8fafc;
+}
+
+.upload-icon {
+    margin-bottom: 12px;
+}
+
+.upload-text {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.upload-browse {
+    color: #f7b84b;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .card-body{
     justify-content: center;
     font-size:17px;
     padding:10px;
 
 }
+
+.card-body label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #374151;
+}
+
 
 .card-footer {
     display: flex;
@@ -74,7 +239,7 @@
 }
 
 .btn-submit {
-    background-color: #007bff;
+    background-color: #f7b84b;
     color: white;
     padding: 10px 50px;
     border-radius: 30px;
@@ -82,7 +247,7 @@
 }
 
 .btn-submit:hover {
-    background-color: #0056b3;
+    background-color: #e39c29;
     color: white;
 }
 
@@ -90,30 +255,210 @@ input[name="caption"] {
     width: 100%;
 }
 
+.btn-batal {
+    background-color: #e1e1e1;
+    color: #333;
+    text-decoration: none;
+    padding: 10px 30px;
+    border-radius: 30px;
+    border: 1px solid #e2e8f0;
+    font-weight: 600;
+}
+
+.btn-batal:hover {
+    background-color: #e2e8f0;
+    color: #333;
+}
 
 
-/* ===== NAVBAR CREATE BERITA ===== */
-.search-box {
+
+
+trix-toolbar .trix-button-row {
+    border: none !important;
+    border-bottom: 2px solid #e4e5e6!important;
+    border-radius: 0 !important;
+    background: #fff;
+    padding: 6px 4px;
+}
+
+.trix-field trix-editor.custom-trix {
+    border: 2px solid #e4e5e6 !important;
+    border-radius: 8px !important;
+    margin-top: 8px !important;
+    min-height: 150px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 400 !important;
+    color: #1e293b;
+    background: #fff;
+    box-shadow: none !important;
+}
+
+/* Wrapper toolbar + editor */
+.trix-field trix-editor,
+.trix-field trix-toolbar {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Toolbar tanpa border luar */
+.trix-field trix-toolbar .trix-button-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    padding: 6px 4px;
+    background: #fff;
+    border: none !important;
+    border-bottom: 1px solid #ffffff !important;
+    border-radius: 0 !important;
+}
+
+
+/* Sembunyikan paperclip & undo/redo */
+.trix-field trix-toolbar .trix-button-group--file-tools {
+    display: none !important;
+}
+
+/* Hapus border antar grup */
+.trix-field trix-toolbar .trix-button-group {
+    border: none !important;
+    margin: 0 !important;
+}
+
+/* Tombol dengan border kotak */
+.trix-field trix-toolbar .trix-button {
+    border: 2px solid #e4e5e6 !important;
+    border-radius: 6px !important;
+    background: #fff !important;
+    padding: 4px 10px !important;
+    color: #090909;
+    font-size: 0.8rem;
+    min-width: unset !important;
+    margin: 0 3px !important;
+}
+
+.trix-field trix-toolbar .trix-button:hover {
+    background: #f1f5f9 !important;
+}
+
+.trix-field trix-toolbar .trix-button.trix-active {
+    background: #e2e8f0 !important;
+}
+
+/* Sembunyikan tombol indent (yang greyed out) */
+.trix-field trix-toolbar .trix-button--icon-decrease-nesting-level,
+.trix-field trix-toolbar .trix-button--icon-increase-nesting-level {
     display: none;
 }
 
-.navbar {
-    justify-content: flex-end;
+/* Area tulis */
+.trix-field trix-editor {
+    border: 1px solid #e4e5e6 !important;
+    border-top: none !important;
+    border-radius: 0 0 8px 8px !important;
+    min-height: 150px;
+    padding: 12px;
+    font-size: 0.9rem;
+    color: #1e293b;
+    background: #fff;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+
+.trix-field trix-editor.custom-trix:focus,
+.trix-field trix-editor.custom-trix:focus-within {
+    outline: none !important;
+    border-color: #94a3b8 !important;
+}
+
+.trix-field trix-editor {
+    height: 300px;
+    overflow-y: auto;
+}
+
+.trix-field trix-editor:focus {
+    outline: none !important;
+    border-color: #94a3b8 !important;
+}
+
+.trix-field trix-editor .trix-content {
+    border-top: none !important;
+    overflow: hidden !important;
+    padding-left: 20px !important;
+}
+
+.trix-field trix-editor.custom-trix ul,
+.trix-field trix-editor.custom-trix ol {
+    padding-left: 20px !important;
+    margin-left: 0 !important;
+}
+
+.trix-field .trix-content {
+    font-weight: 400 !important;
+}
+
+
+/* ===== CREATE/EDIT BERITA ===== */
+
+.btn-draft {
+    background-color: #f59e0b;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 30px;
+    border: none;
+    margin: 0 5px;
+}
+
+.btn-draft:hover {
+    background-color: #d97706;
+    color: white;
+}
+
+.btn-schedule {
+    background-color: #2d5a27;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 30px;
+    border: none;
+    margin-left: 10px;
+}
+
+.btn-schedule:hover {
+    background-color: #1e3d1a;
+    color: white;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .judul-halaman {
+        font-size: 22px;
+    }
+
+    .card-body {
+        padding: 14px;
+    }
+
+    .upload-area {
+        padding: 32px 16px;
+    }
+
+    #tags-container {
+        max-width: 100%;
+    }
+
+    .card-footer {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn-submit,
+    .btn-draft,
+    .btn-schedule,
+    .btn-batal {
+        margin: 0;
+    }
 }
 
 @media (max-width: 767px) {
-    .navbar {
-        left: 0;
-        right: 0;
-        top: 0;
-        height: 70px;
-        padding: 0 15px;
-        justify-content: flex-end;
-        background: transparent;
-        border-bottom: none;
-        z-index: 98;
-    }
-    
     #btn-menu {
         position: relative;
         z-index: 1003;
@@ -131,6 +476,92 @@ input[name="caption"] {
 
     .profile-details {
         padding: 0;
+    }
+
+    trix-toolbar .trix-button-group--history-tools {
+        display: flex !important;
+    }
+    
+    trix-toolbar .trix-button-row {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        gap: 4px !important;
+    }
+
+    .judul-halaman {
+        font-size: 20px;
+        line-height: 1.3;
+    }
+
+    .card-details-berita,
+    .card.card-upload-gambar {
+        border-radius: 16px !important;
+    }
+
+    .card-body {
+        padding: 14px;
+        font-size: 14px;
+    }
+
+    .card-body label {
+        font-size: 14px;
+    }
+
+    .custom-input {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+
+    #tags-container {
+        max-width: 100%;
+    }
+
+    #tags-container .tag-row {
+        width: 100%;
+    }
+
+    #tags-container .btn-add {
+        padding: 0 12px;
+    }
+
+    .upload-area {
+        padding: 26px 14px;
+        min-height: 130px;
+    }
+
+    #previewGambar {
+        max-height: 190px;
+    }
+
+    .trix-field trix-toolbar .trix-button-row {
+        gap: 6px;
+        padding-bottom: 8px;
+    }
+
+    .trix-field trix-toolbar .trix-button {
+        padding: 4px 8px !important;
+    }
+
+    .trix-field trix-editor {
+        min-height: 180px;
+        font-size: 14px;
+    }
+
+    .card-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 12px 0 4px;
+    }
+
+    .btn-submit,
+    .btn-draft,
+    .btn-schedule,
+    .btn-batal {
+        width: 100%;
+        margin: 0;
+        text-align: center;
+        padding: 11px 16px;
     }
 }
 
@@ -150,13 +581,3 @@ input[name="caption"] {
     }
 }
 
-@media (max-width: 767px) {
-    .navbar {
-        left: auto; /* jangan mulai dari kiri */
-        right: 0;
-        width: auto; /* hanya selebar kontennya */
-        background: transparent;
-        border-bottom: none;
-        z-index: 1002;
-    }
-}

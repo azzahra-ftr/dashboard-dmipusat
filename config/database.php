@@ -65,11 +65,11 @@ return [
 
         'wordpress' => [
             'driver' => 'mysql',
-            'host' => '127.0.0.1',
-            'port' => '3307',
-            'database' => 'db_dmi',
-            'username' => 'root',
-            'password' => '',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'db_dmi'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',

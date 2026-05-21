@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Models\PostTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Models\PostTag;
 
 class BeritaController extends Controller
 {
@@ -34,7 +35,7 @@ class BeritaController extends Controller
         }
 
         // Simpan berita ke tabel ism13qf_posts
-        $postId = DB::table('ism13qf_posts')->insertGetId([
+        $postId = DB::connection('wordpress')->table('ism13qf_posts')->insertGetId([
             'post_title'         => $request->judul,
             'post_author'        => $request->penulis,
             'post_content'       => $request->isi_berita,

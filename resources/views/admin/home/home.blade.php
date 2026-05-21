@@ -7,6 +7,18 @@
 @section('content')
 <div class="home-container">
 
+    <div class="dashboard-hero">
+        <div>
+            <span class="dashboard-eyebrow">Dashboard Overview</span>
+            <h2>Monitoring Konten DMI</h2>
+            <p>Pantau berita, event, jadwal publish, dan aktivitas konten dari satu layar kerja.</p>
+        </div>
+        <div class="dashboard-status">
+            <span class="status-pulse"></span>
+            Sistem Aktif
+        </div>
+    </div>
+
     {{-- ═══════════════════════════════════════ --}}
     {{-- SECTION STATISTIK                      --}}
     {{-- ═══════════════════════════════════════ --}}
@@ -14,21 +26,25 @@
     {{-- Kartu Ringkasan --}}
     <div class="stat-grid">
         <div class="stat-card">
+            <div class="stat-icon stat-icon-green"><i class='bx bx-news'></i></div>
             <p class="stat-label">Total Berita</p>
             <p class="stat-val">{{ number_format($totalBerita) }}</p>
             <p class="stat-sub">postingan aktif</p>
         </div>
         <div class="stat-card">
+            <div class="stat-icon stat-icon-blue"><i class='bx bx-show'></i></div>
             <p class="stat-label">Pengunjung</p>
             <p class="stat-val">{{ $totalViews >= 1000 ? number_format($totalViews / 1000, 1) . 'K' : number_format($totalViews) }}</p>
             <p class="stat-sub">semua postingan</p>
         </div>
         <div class="stat-card">
+            <div class="stat-icon stat-icon-amber"><i class='bx bx-time-five'></i></div>
             <p class="stat-label">Postingan Mendatang</p>
             <p class="stat-val">{{ number_format($upcomingPost) }}</p>
             <p class="stat-sub">terjadwal tayang</p>
         </div>
         <div class="stat-card">
+            <div class="stat-icon stat-icon-purple"><i class='bx bx-calendar-event'></i></div>
             <p class="stat-label">Total Event</p>
             <p class="stat-val">{{ number_format($totalEvent) }}</p>
             <p class="stat-sub">{{ $eventBerlangsung }} berlangsung</p>
@@ -141,6 +157,10 @@
                          alt="{{ $featuredPost->post_title ?? '' }}">
                 </div>
                 <div class="berita-featured-body">
+                    <h3 class="berita-featured-title">{{ Str::limit($featuredPost->post_title ?? 'Belum ada berita', 80) }}</h3>
+                    @if($featuredPost)
+                        <span class="berita-featured-date">{{ \Carbon\Carbon::parse($featuredPost->post_date)->format('d M Y, H:i') }}</span>
+                    @endif
                     <p class="berita-featured-desc">
                         {{ Str::limit(strip_tags($featuredPost->post_content ?? ''), 120) }}
                     </p>
